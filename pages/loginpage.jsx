@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Eye, EyeOff, Lock, User, AlertCircle, CheckCircle } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  User,
+  AlertCircle,
+  CheckCircle,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
@@ -44,11 +51,14 @@ const LoginPage = () => {
 
     try {
       // 🔥 Call backend login API
-      const res = await fetch("http://localhost:5001/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://crm-backend-4ng3.onrender.com/api/admin/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
 
@@ -147,7 +157,11 @@ const LoginPage = () => {
                     className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500"
                     disabled={loading}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -167,7 +181,9 @@ const LoginPage = () => {
 
         {/* Footer */}
         <div className="text-center mt-8 text-sm">
-          <p className="text-gray-400 mb-2">&copy; 2025 CRM Platform. All rights reserved.</p>
+          <p className="text-gray-400 mb-2">
+            &copy; 2025 CRM Platform. All rights reserved.
+          </p>
           <div className="flex justify-center space-x-6 text-gray-500">
             <button className="hover:text-blue-600">Privacy Policy</button>
             <button className="hover:text-blue-600">Terms of Service</button>

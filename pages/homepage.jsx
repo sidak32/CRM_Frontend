@@ -1,17 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Send, Users, BarChart3, CheckCircle, XCircle, Clock, Play, RefreshCw, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import {
+  Plus,
+  Send,
+  Users,
+  BarChart3,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Play,
+  RefreshCw,
+  AlertCircle,
+} from "lucide-react";
 
 // API configuration
-const API_BASE_URL = "http://localhost:5001/api"; // changed port to backend (5001)
+const API_BASE_URL = "https://crm-backend-4ng3.onrender.com/api"; // changed port to backend (5001)
 
 // API functions to connect with your backend
 const api = {
   createCampaign: async (campaignData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/createcampaign`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(campaignData),
       });
@@ -22,7 +33,7 @@ const api = {
 
       return await response.json();
     } catch (error) {
-      console.error('Create campaign error:', error);
+      console.error("Create campaign error:", error);
       throw error;
     }
   },
@@ -30,9 +41,9 @@ const api = {
   getAllCampaigns: async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/getallcampaigns`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -42,7 +53,7 @@ const api = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get campaigns error:', error);
+      console.error("Get campaigns error:", error);
       throw error;
     }
   },
@@ -50,9 +61,9 @@ const api = {
   getCampaignById: async (id) => {
     try {
       const response = await fetch(`${API_BASE_URL}/getcampaignbyid`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -62,7 +73,7 @@ const api = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get campaign by ID error:', error);
+      console.error("Get campaign by ID error:", error);
       throw error;
     }
   },
@@ -70,9 +81,9 @@ const api = {
   getCampaignStats: async (id) => {
     try {
       const response = await fetch(`${API_BASE_URL}/campaigns/${id}/stats`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
@@ -82,7 +93,7 @@ const api = {
 
       return await response.json();
     } catch (error) {
-      console.error('Get campaign stats error:', error);
+      console.error("Get campaign stats error:", error);
       throw error;
     }
   },
@@ -90,9 +101,9 @@ const api = {
   updateCampaignDelivery: async (deliveryData) => {
     try {
       const response = await fetch(`${API_BASE_URL}/campaigns/delivery`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(deliveryData),
       });
@@ -103,14 +114,14 @@ const api = {
 
       return await response.json();
     } catch (error) {
-      console.error('Update campaign delivery error:', error);
+      console.error("Update campaign delivery error:", error);
       throw error;
     }
   },
 };
 
 const CampaignManagementApp = () => {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -126,8 +137,10 @@ const CampaignManagementApp = () => {
       const data = await api.getAllCampaigns();
       setCampaigns(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('Failed to load campaigns:', error);
-      setError('Failed to load campaigns. Please check your connection and try again.');
+      console.error("Failed to load campaigns:", error);
+      setError(
+        "Failed to load campaigns. Please check your connection and try again."
+      );
       setCampaigns([]);
     } finally {
       setLoading(false);
@@ -140,9 +153,21 @@ const CampaignManagementApp = () => {
 
   const StatusBadge = ({ status }) => {
     const statusConfig = {
-      pending: { color: 'bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-800 border border-orange-200', icon: Clock },
-      running: { color: 'bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border border-blue-200', icon: Play },
-      completed: { color: 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200', icon: CheckCircle },
+      pending: {
+        color:
+          "bg-gradient-to-r from-yellow-100 to-orange-100 text-orange-800 border border-orange-200",
+        icon: Clock,
+      },
+      running: {
+        color:
+          "bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border border-blue-200",
+        icon: Play,
+      },
+      completed: {
+        color:
+          "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200",
+        icon: CheckCircle,
+      },
     };
 
     const config = statusConfig[status] || statusConfig.pending;
@@ -160,11 +185,11 @@ const CampaignManagementApp = () => {
 
   const CreateCampaignForm = ({ onCampaignCreated }) => {
     const [formData, setFormData] = useState({
-      title: '',
-      message: '',
+      title: "",
+      message: "",
       segmentRules: {
-        spend: '',
-        visits: '',
+        spend: "",
+        visits: "",
       },
       messageVariants: [],
     });
@@ -173,11 +198,11 @@ const CampaignManagementApp = () => {
 
     const validateForm = () => {
       if (!formData.title.trim()) {
-        setFormError('Campaign title is required');
+        setFormError("Campaign title is required");
         return false;
       }
       if (!formData.message.trim()) {
-        setFormError('Campaign message is required');
+        setFormError("Campaign message is required");
         return false;
       }
 
@@ -189,11 +214,11 @@ const CampaignManagementApp = () => {
       };
 
       if (!validateRule(spend)) {
-        setFormError('Spend rule format should be like: >1000, <500, =100');
+        setFormError("Spend rule format should be like: >1000, <500, =100");
         return false;
       }
       if (!validateRule(visits)) {
-        setFormError('Visits rule format should be like: >5, <10, =3');
+        setFormError("Visits rule format should be like: >5, <10, =3");
         return false;
       }
 
@@ -212,9 +237,13 @@ const CampaignManagementApp = () => {
           title: formData.title.trim(),
           message: formData.message.trim(),
           segmentRules: Object.fromEntries(
-            Object.entries(formData.segmentRules).filter(([, value]) => value.trim())
+            Object.entries(formData.segmentRules).filter(([, value]) =>
+              value.trim()
+            )
           ),
-          messageVariants: formData.messageVariants.filter((variant) => variant.trim()),
+          messageVariants: formData.messageVariants.filter((variant) =>
+            variant.trim()
+          ),
         };
 
         const result = await api.createCampaign(campaignData);
@@ -222,14 +251,14 @@ const CampaignManagementApp = () => {
 
         // Reset form
         setFormData({
-          title: '',
-          message: '',
-          segmentRules: { spend: '', visits: '' },
+          title: "",
+          message: "",
+          segmentRules: { spend: "", visits: "" },
           messageVariants: [],
         });
       } catch (error) {
-        console.error('Failed to create campaign:', error);
-        setFormError('Failed to create campaign. Please try again.');
+        console.error("Failed to create campaign:", error);
+        setFormError("Failed to create campaign. Please try again.");
       } finally {
         setCreating(false);
       }
@@ -241,7 +270,9 @@ const CampaignManagementApp = () => {
           <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
             <Plus className="w-5 h-5 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Create New Campaign</h2>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Create New Campaign
+          </h2>
         </div>
 
         {formError && (
@@ -255,11 +286,15 @@ const CampaignManagementApp = () => {
 
         <div className="space-y-6">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">Campaign Title *</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Campaign Title *
+            </label>
             <input
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
               placeholder="e.g., Diwali Discount Campaign"
               required
@@ -267,10 +302,14 @@ const CampaignManagementApp = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-3">Message Template *</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-3">
+              Message Template *
+            </label>
             <textarea
               value={formData.message}
-              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, message: e.target.value })
+              }
               rows={3}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
               placeholder="Hi [name], get 20% OFF this Diwali!"
@@ -283,17 +322,24 @@ const CampaignManagementApp = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-4">Audience Segmentation Rules</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-4">
+              Audience Segmentation Rules
+            </label>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200">
-                <label className="block text-xs font-medium text-green-700 mb-2">Customer Spend</label>
+                <label className="block text-xs font-medium text-green-700 mb-2">
+                  Customer Spend
+                </label>
                 <input
                   type="text"
                   value={formData.segmentRules.spend}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      segmentRules: { ...formData.segmentRules, spend: e.target.value },
+                      segmentRules: {
+                        ...formData.segmentRules,
+                        spend: e.target.value,
+                      },
                     })
                   }
                   className="w-full px-3 py-2 border border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm bg-white"
@@ -301,14 +347,19 @@ const CampaignManagementApp = () => {
                 />
               </div>
               <div className="bg-gradient-to-br from-purple-50 to-violet-50 p-4 rounded-lg border border-purple-200">
-                <label className="block text-xs font-medium text-purple-700 mb-2">Visit Count</label>
+                <label className="block text-xs font-medium text-purple-700 mb-2">
+                  Visit Count
+                </label>
                 <input
                   type="text"
                   value={formData.segmentRules.visits}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      segmentRules: { ...formData.segmentRules, visits: e.target.value },
+                      segmentRules: {
+                        ...formData.segmentRules,
+                        visits: e.target.value,
+                      },
                     })
                   }
                   className="w-full px-3 py-2 border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm bg-white"
@@ -347,11 +398,21 @@ const CampaignManagementApp = () => {
 
   const CampaignDashboard = () => {
     const totalCampaigns = campaigns.length;
-    const activeCampaigns = campaigns.filter((c) => c.status === 'running').length;
-    const completedCampaigns = campaigns.filter((c) => c.status === 'completed').length;
+    const activeCampaigns = campaigns.filter(
+      (c) => c.status === "running"
+    ).length;
+    const completedCampaigns = campaigns.filter(
+      (c) => c.status === "completed"
+    ).length;
     const totalSent = campaigns.reduce((sum, c) => sum + (c.sentCount || 0), 0);
-    const totalFailed = campaigns.reduce((sum, c) => sum + (c.failedCount || 0), 0);
-    const totalAudience = campaigns.reduce((sum, c) => sum + (c.audienceSize || 0), 0);
+    const totalFailed = campaigns.reduce(
+      (sum, c) => sum + (c.failedCount || 0),
+      0
+    );
+    const totalAudience = campaigns.reduce(
+      (sum, c) => sum + (c.audienceSize || 0),
+      0
+    );
 
     return (
       <div className="space-y-8">
@@ -363,7 +424,9 @@ const CampaignManagementApp = () => {
                 <BarChart3 className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-blue-100 text-sm font-medium">Total Campaigns</p>
+                <p className="text-blue-100 text-sm font-medium">
+                  Total Campaigns
+                </p>
                 <p className="text-3xl font-bold">{totalCampaigns}</p>
               </div>
             </div>
@@ -375,7 +438,9 @@ const CampaignManagementApp = () => {
                 <Play className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-green-100 text-sm font-medium">Active Campaigns</p>
+                <p className="text-green-100 text-sm font-medium">
+                  Active Campaigns
+                </p>
                 <p className="text-3xl font-bold">{activeCampaigns}</p>
               </div>
             </div>
@@ -387,8 +452,12 @@ const CampaignManagementApp = () => {
                 <Send className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-purple-100 text-sm font-medium">Messages Sent</p>
-                <p className="text-3xl font-bold">{totalSent.toLocaleString()}</p>
+                <p className="text-purple-100 text-sm font-medium">
+                  Messages Sent
+                </p>
+                <p className="text-3xl font-bold">
+                  {totalSent.toLocaleString()}
+                </p>
               </div>
             </div>
           </div>
@@ -399,8 +468,12 @@ const CampaignManagementApp = () => {
                 <Users className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-orange-100 text-sm font-medium">Total Audience</p>
-                <p className="text-3xl font-bold">{totalAudience.toLocaleString()}</p>
+                <p className="text-orange-100 text-sm font-medium">
+                  Total Audience
+                </p>
+                <p className="text-3xl font-bold">
+                  {totalAudience.toLocaleString()}
+                </p>
               </div>
             </div>
           </div>
@@ -414,14 +487,21 @@ const CampaignManagementApp = () => {
                 <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
                   <BarChart3 className="w-5 h-5 text-white" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900">All Campaigns</h2>
+                <h2 className="text-xl font-bold text-gray-900">
+                  All Campaigns
+                </h2>
               </div>
               <button
                 onClick={refreshCampaigns}
                 disabled={loading}
                 className="flex items-center gap-2 px-4 py-2 text-sm bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 rounded-lg disabled:opacity-50 font-medium transition-all duration-200 shadow-sm hover:shadow-md"
               >
-                <RefreshCw size={16} className={loading ? 'animate-spin text-blue-600' : 'text-gray-600'} />
+                <RefreshCw
+                  size={16}
+                  className={
+                    loading ? "animate-spin text-blue-600" : "text-gray-600"
+                  }
+                />
                 Refresh
               </button>
             </div>
@@ -439,14 +519,18 @@ const CampaignManagementApp = () => {
           {loading ? (
             <div className="p-8 text-center">
               <div className="animate-spin rounded-full h-10 w-10 border-4 border-blue-200 border-t-blue-600 mx-auto"></div>
-              <p className="text-gray-600 mt-4 font-medium">Loading campaigns...</p>
+              <p className="text-gray-600 mt-4 font-medium">
+                Loading campaigns...
+              </p>
             </div>
           ) : campaigns.length === 0 && !error ? (
             <div className="p-8 text-center text-gray-500">
               <div className="w-16 h-16 bg-gradient-to-r from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
                 <BarChart3 className="h-8 w-8 text-gray-400" />
               </div>
-              <p className="font-medium">No campaigns found. Create your first campaign to get started!</p>
+              <p className="font-medium">
+                No campaigns found. Create your first campaign to get started!
+              </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -486,28 +570,36 @@ const CampaignManagementApp = () => {
                         : 0;
 
                     // Color coding for rows based on performance
-                    const rowBgColor = successRate >= 80 
-                      ? 'hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50' 
-                      : successRate >= 60 
-                      ? 'hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50'
-                      : 'hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50';
+                    const rowBgColor =
+                      successRate >= 80
+                        ? "hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50"
+                        : successRate >= 60
+                        ? "hover:bg-gradient-to-r hover:from-yellow-50 hover:to-orange-50"
+                        : "hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50";
 
                     // Avatar colors
                     const avatarColors = [
-                      'bg-gradient-to-r from-blue-500 to-indigo-600',
-                      'bg-gradient-to-r from-green-500 to-emerald-600', 
-                      'bg-gradient-to-r from-purple-500 to-violet-600',
-                      'bg-gradient-to-r from-pink-500 to-rose-600',
-                      'bg-gradient-to-r from-yellow-500 to-orange-600',
-                      'bg-gradient-to-r from-cyan-500 to-teal-600'
+                      "bg-gradient-to-r from-blue-500 to-indigo-600",
+                      "bg-gradient-to-r from-green-500 to-emerald-600",
+                      "bg-gradient-to-r from-purple-500 to-violet-600",
+                      "bg-gradient-to-r from-pink-500 to-rose-600",
+                      "bg-gradient-to-r from-yellow-500 to-orange-600",
+                      "bg-gradient-to-r from-cyan-500 to-teal-600",
                     ];
 
                     return (
-                      <tr key={campaign._id} className={`transition-all duration-200 ${rowBgColor}`}>
+                      <tr
+                        key={campaign._id}
+                        className={`transition-all duration-200 ${rowBgColor}`}
+                      >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md ${avatarColors[index % avatarColors.length]}`}>
-                              {campaign.title?.charAt(0) || 'C'}
+                            <div
+                              className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md ${
+                                avatarColors[index % avatarColors.length]
+                              }`}
+                            >
+                              {campaign.title?.charAt(0) || "C"}
                             </div>
                             <div>
                               <div className="text-sm font-semibold text-gray-900">
@@ -552,20 +644,28 @@ const CampaignManagementApp = () => {
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             <div className="flex-1 bg-gray-200 rounded-full h-2 max-w-20">
-                              <div 
+                              <div
                                 className={`h-2 rounded-full ${
-                                  successRate >= 80 ? 'bg-gradient-to-r from-green-400 to-green-500' :
-                                  successRate >= 60 ? 'bg-gradient-to-r from-yellow-400 to-orange-500' :
-                                  'bg-gradient-to-r from-red-400 to-red-500'
+                                  successRate >= 80
+                                    ? "bg-gradient-to-r from-green-400 to-green-500"
+                                    : successRate >= 60
+                                    ? "bg-gradient-to-r from-yellow-400 to-orange-500"
+                                    : "bg-gradient-to-r from-red-400 to-red-500"
                                 }`}
-                                style={{ width: `${Math.max(successRate, 5)}%` }}
+                                style={{
+                                  width: `${Math.max(successRate, 5)}%`,
+                                }}
                               ></div>
                             </div>
-                            <span className={`text-sm font-bold ${
-                              successRate >= 80 ? 'text-green-600' :
-                              successRate >= 60 ? 'text-orange-600' :
-                              'text-red-600'
-                            }`}>
+                            <span
+                              className={`text-sm font-bold ${
+                                successRate >= 80
+                                  ? "text-green-600"
+                                  : successRate >= 60
+                                  ? "text-orange-600"
+                                  : "text-red-600"
+                              }`}
+                            >
                               {successRate.toFixed(1)}%
                             </span>
                           </div>
@@ -573,7 +673,7 @@ const CampaignManagementApp = () => {
                         <td className="px-6 py-4 text-sm text-gray-500 font-medium">
                           {campaign.createdAt
                             ? new Date(campaign.createdAt).toLocaleDateString()
-                            : 'N/A'}
+                            : "N/A"}
                         </td>
                       </tr>
                     );
@@ -597,28 +697,32 @@ const CampaignManagementApp = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-lg">C</span>
               </div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Campaign Manager</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                Campaign Manager
+              </h1>
               <span className="text-xs bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-600 px-3 py-1 rounded-full font-medium border border-blue-200">
-                {API_BASE_URL.includes('localhost') ? 'Development' : 'Production'}
+                {API_BASE_URL.includes("localhost")
+                  ? "Development"
+                  : "Production"}
               </span>
             </div>
             <div className="flex space-x-1 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg p-1 shadow-inner">
               <button
-                onClick={() => setActiveTab('dashboard')}
+                onClick={() => setActiveTab("dashboard")}
                 className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                  activeTab === 'dashboard'
-                    ? 'bg-white text-gray-900 shadow-md transform scale-105'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  activeTab === "dashboard"
+                    ? "bg-white text-gray-900 shadow-md transform scale-105"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                 }`}
               >
                 Dashboard
               </button>
               <button
-                onClick={() => setActiveTab('create')}
+                onClick={() => setActiveTab("create")}
                 className={`px-6 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                  activeTab === 'create'
-                    ? 'bg-white text-gray-900 shadow-md transform scale-105'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
+                  activeTab === "create"
+                    ? "bg-white text-gray-900 shadow-md transform scale-105"
+                    : "text-gray-600 hover:text-gray-900 hover:bg-white/50"
                 }`}
               >
                 Create Campaign
@@ -630,7 +734,7 @@ const CampaignManagementApp = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'dashboard' ? (
+        {activeTab === "dashboard" ? (
           <CampaignDashboard />
         ) : (
           <CreateCampaignForm
@@ -639,7 +743,7 @@ const CampaignManagementApp = () => {
                 `Campaign created successfully!\nCampaign ID: ${result.campaignId}\nAudience Size: ${result.audienceSize}`
               );
               loadCampaigns(); // Refresh the campaigns list
-              setActiveTab('dashboard'); // Switch back to dashboard
+              setActiveTab("dashboard"); // Switch back to dashboard
             }}
           />
         )}
